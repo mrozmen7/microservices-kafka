@@ -1,3 +1,50 @@
+
+
+# Microservices Kafka Architecture
+
+## 🧩 Overview
+
+### This project demonstrates a simple yet production-ready microservices architecture built with Spring Boot, Apache Kafka, and PostgreSQL. The system is event-driven, meaning services communicate asynchronously using Kafka topics.
+
+### The architecture consists of the following services:
+ --- 
+# 🔁 Communication Flow
+
+```
+sequenceDiagram
+    participant User
+    participant OrderService
+    participant Kafka
+    participant ShippingService
+    participant InventoryService
+
+    User->>OrderService: POST /api/orders
+    OrderService->>Kafka: publish order JSON
+    Kafka->>ShippingService: consume order-event
+    Kafka->>InventoryService: consume order-event
+    ShippingService->>PostgreSQL: save shipping info
+    InventoryService->>PostgreSQL: save inventory info
+```
+
+--- 
+## ⚙️ How It Works
+### 1.	User sends a new order via REST endpoint (/api/orders)
+### 2.	Order Service saves the order to database and sends the order as a JSON message to Kafka
+### 3.	Both Shipping and Inventory Services listen to the Kafka topic order-events
+### 4.	On receiving the event:
+### •	Shipping service creates a shipping record (default address, pending status)
+### •	Inventory service creates an inventory check (assumed available)
+### 5.	All logs and DB inserts happen independently — no direct REST calls between services.
+
+⸻
+
+
+
+
+
+
+
+
 # 🛒 Order Microservice ---
 ![Order Folder Structure](images/micro.png) 
 ---
